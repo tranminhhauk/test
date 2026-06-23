@@ -1,0 +1,10 @@
+Book,Toi Thay Hoa Vang Tren Co Xanh,Nguyen Nhat Anh,5
+Book,Dac Nhan Tam,Dale Carnegie,3
+
+Member,Alice
+Member,Bob
+
+Borrow,Alice,Toi Thay Hoa Vang Tren Co Xanh
+Borrow,Bob,Dac Nhan Tam
+
+Return,Alice,Toi Thay Hoa Vang Tren Co Xanh
