@@ -1,2 +1,6 @@
 hello
+<<<<<<< HEAD
 hello hello
+=======
+hello world
+>>>>>>> newBranch
