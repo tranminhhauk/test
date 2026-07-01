@@ -429,31 +429,118 @@ class Cinema:
             for record in cus.booking_history:
                 total += record[2]
         return total
-cinema = Cinema('Rap phim')
-with open('abcd.txt', 'r', encoding= 'utf-8') as file:
-    for line in file:
-        line = line.strip()
-        if not line:
-            continue
-        values = line.split('|')
-        obj = None
-        if values[0] == 'SEAT':
-            if values[1] == 'StandardSeat':
-                obj = StandardSeat(values[2], values[3], values[4])
-            elif values[1] == 'VipSeat':
-                obj = VipSeat(values[2], values[3], values[4])
-            elif values[1] == 'CouchSeat':
-                obj = CouchSeat(values[2], values[3], values[4])
-            cinema.add_seat(obj)
-        elif values[0] == 'CUSTOMER':
-            obj = Customer(values[1])
-            cinema.register_customer(obj)
-            print(f'register {obj}')
-        elif values[0] == 'BOOK':
-            for cus in cinema.customers:
-                if cus.name == values[1]:
-                    print(cinema.book_seat(cus, values[2], int(values[3])))
-                    break
-        elif values[0] == 'CANCEL':
-            cinema.cancel_booking(values[1])
-        
+# cinema = Cinema('Rap phim')
+# with open('abcd.txt', 'r', encoding= 'utf-8') as file:
+#     for line in file:
+#         line = line.strip()
+#         if not line:
+#             continue
+#         values = line.split('|')
+#         obj = None
+#         if values[0] == 'SEAT':
+#             if values[1] == 'StandardSeat':
+#                 obj = StandardSeat(values[2], values[3], values[4])
+#             elif values[1] == 'VipSeat':
+#                 obj = VipSeat(values[2], values[3], values[4])
+#             elif values[1] == 'CouchSeat':
+#                 obj = CouchSeat(values[2], values[3], values[4])
+#             cinema.add_seat(obj)
+#         elif values[0] == 'CUSTOMER':
+#             obj = Customer(values[1])
+#             cinema.register_customer(obj)
+#             print(f'register {obj}')
+#         elif values[0] == 'BOOK':
+#             for cus in cinema.customers:
+#                 if cus.name == values[1]:
+#                     print(cinema.book_seat(cus, values[2], int(values[3])))
+#                     break
+#         elif values[0] == 'CANCEL':
+#             cinema.cancel_booking(values[1])
+    
+class BankAccount:
+    def __init__(self, owner, __balance):
+        self.owner = owner
+        self.history = [] 
+        self.balance = __balance
+    @property
+    def balance(self):
+        return self.__balance
+    @balance.setter
+    def balance(self, value):
+        if value >= 0:
+            self.__balance = value
+        else:
+            print('Invalid balance')
+    def deposit(self, amount):
+        self.balance += amount
+        self.history.append(f'Deposit: +{amount}')
+        return self.balance
+    def withdraw(self, amount):
+        if self.balance - amount >= 0:
+            self.balance =self.balance - amount
+            self.history.append(f'Deposit: -{amount}')
+            return self.balance
+        else:
+            print('Invalid balance')
+    def show_balance(self):
+        return f'{self.owner} balance: {self.balance}' 
+    def print_history(self):
+        for item in self.history:
+            print(item)
+class SavingAccount(BankAccount):
+    def __init__(self, owner,interest_rate, balance=0, ):
+        super().__init__(owner, balance,)
+        self.interest_rate = interest_rate
+    def add_interest(self):
+        total = self.balance * self.interest_rate
+        self.balance += total 
+        self.history.append(f'Interest +{total}')
+        return self.balance
+# Hau = SavingAccount('Hau', 0.6, 10)
+# print(Hau.deposit(10))
+# print(Hau.withdraw(30))
+# print(Hau.add_interest())
+# Hau.balance = -100
+# print(Hau.show_balance())
+# Hau.print_history()
+
+from abc import ABC, abstractmethod
+class Product(ABC):
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+    @abstractmethod
+    def final_price(self):
+        pass
+class RegularProduct(Product):
+    def __init__(self, name, price):
+        super().__init__(name, price)
+    def final_price(self):
+        return self.price
+class DiscountedProduct(Product):
+    def __init__(self, name, price, discount):
+        super().__init__(name, price)
+        self.discount = discount
+    def final_price(self):
+        final = self.price - (self.price * (self.discount / 100))
+        return final
+class TaxedProduct(Product):
+    def __init__(self, name, price, tax_percent):
+        super().__init__(name, price)
+        self.tax_percent = tax_percent
+    def final_price(self):
+        final = self.price + (self.price * (self.tax_percent / 100))
+        return final
+def print_receipt(products):
+    total = 0
+    for product in products:
+        price = product.final_price()
+        print(f'{product.name} : {price}')
+        total += price
+    return total
+products = [
+       RegularProduct("Bút bi", 5000),
+       DiscountedProduct("Áo thun", 200000, 20),
+       TaxedProduct("Laptop", 15000000, 10),
+   ]
+print_receipt(products)
