@@ -538,9 +538,78 @@ def print_receipt(products):
         print(f'{product.name} : {price}')
         total += price
     return total
-products = [
-       RegularProduct("Bút bi", 5000),
-       DiscountedProduct("Áo thun", 200000, 20),
-       TaxedProduct("Laptop", 15000000, 10),
-   ]
-print_receipt(products)
+class ShoppingCart:
+    def __init__(self):
+        self.items = []
+    def add_item(self, product):
+        self.items.append(product)
+    def remove_item(self, product_name):
+        find =  False
+        name = None
+        for value in self.items:
+            if value.name == product_name:
+                name = value
+                self.items.remove(name)
+                find = True
+                break
+        if find == False:
+            print('Not find product')
+    def total(self):
+        total = 0
+        for pro in self.items:
+            price = pro.final_price()
+            total += price
+        return total
+    def checkout(self):
+        for i in self.items:
+            price = i.final_price()
+            print(f'{i.name} : {price}')
+
+
+# products = [
+#        RegularProduct("Bút bi", 5000),
+#        DiscountedProduct("Áo thun", 200000, 20),
+#        TaxedProduct("Laptop", 15000000, 10),
+#    ]
+# print_receipt(products)
+# cart = ShoppingCart()
+# cart.add_item(RegularProduct("Bút bi", 5000))
+# cart.add_item(DiscountedProduct("Áo thun", 200000, 20))
+# cart.add_item(TaxedProduct("Laptop", 15000000, 10))
+
+# cart.checkout()
+
+# cart.remove_item("Bút bi")
+# cart.checkout()   # kiểm tra bút bi đã bị xóa chưa
+
+# cart.remove_item("Không tồn tại")
+
+class Employee:
+    company_name = "OOP"
+    def __init__(self, name, salary):
+        self.name = name 
+        self.salary = salary
+    @staticmethod
+    def is_valid_salary(salary):
+        if salary > 0:
+            return True
+        else:
+            return False
+    @classmethod
+    def from_string(cls, data_string):
+        name, salary =data_string.split("-")
+        return cls(name, salary)
+class Manager(Employee):
+    def __init__(self, name, salary, team_size):
+        super().__init__(name, salary)
+        self.team_size = team_size
+class Bonus:
+    def calculate_bonus(self):
+        return self.salary * 0.1
+class SeniorManager(Manager, Bonus):
+    pass
+sm = SeniorManager("Long", 20000000, 5)
+print(sm.calculate_bonus())    # phải chạy được dù Bonus không có __init__ riêng
+print(Employee.is_valid_salary(-5))     # gọi static method qua tên class
+emp = Employee.from_string("Nam-15000000")
+print(emp.name, emp.salary) 
